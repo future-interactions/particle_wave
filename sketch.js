@@ -65,3 +65,6 @@ function draw() {
   }
   xoff += speedSlider.value()/250;
 }
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
