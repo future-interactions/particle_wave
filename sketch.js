@@ -18,9 +18,13 @@ function setup() {
   speedSlider.position(390, 16);
   speedSlider.style('width', '160px');
 
-  heightSlider = createSlider(1, 100, 30);
-  heightSlider.position(590, 16);
-  heightSlider.style('width', '160px');
+  waveSizeSlider = createSlider(1, 100, 30);
+  waveSizeSlider.position(590, 16);
+  waveSizeSlider.style('width', '160px');
+
+  waveHeightSlider = createSlider(100, 2000, 300);
+  waveHeightSlider.position(790, 16);
+  waveHeightSlider.style('width', '160px');
 
   let ballSizeText = createElement('desc', 'Particle Size');
   ballSizeText.style('color', '#ffffff');
@@ -34,9 +38,13 @@ function setup() {
   speedText.style('color', '#ffffff');
   speedText.position(398, 36);
 
-  let heightText = createElement('desc', 'Wave Size');
-  heightText.style('color', '#ffffff');
-  heightText.position(598, 36);
+  let waveSizeText = createElement('desc', 'Wave Size');
+  waveSizeText.style('color', '#ffffff');
+  waveSizeText.position(598, 36);
+
+  let waveHeightText = createElement('desc', 'Wave Height');
+  waveHeightText.style('color', '#ffffff');
+  waveHeightText.position(798, 36);
   colorMode(RGB);
 }
 
@@ -53,10 +61,11 @@ function draw() {
   for (let i = 0; i < numOfBalls; i++) {
     for (let j = 0; j < numOfBalls; j++) {
       push();
-      let x = noise(xoff + (i / 10) + (j / heightSlider.value()));
-      translate(-width *0.75, 0, -j * (spacing + ballSize));
-      fill(255, 255, 255, map(x, 0.5, 0.6,180, 255));
-      ellipse(i * (spacing + ballSize), x * 100, ballSize, ballSize);
+      let x = noise(xoff + (i / 10) + (j / waveSizeSlider.value()));
+      translate(-width *0.75,-waveHeightSlider.value()/2, -j * (spacing + ballSize));
+      fill(255, 255, 255, map(x, 0.5, 0.6,200, 255));
+      ellipse(i * (spacing + ballSize), x * waveHeightSlider.value(), ballSize, ballSize);
+     
       pop();
     }
   }
