@@ -82,5 +82,5 @@ function windowResized() {
 }
 
 function saveImage() {
-  saveCanvas('myCanvas', 'png');
+  saveCanvas('perlin_wave', 'png');
 }
