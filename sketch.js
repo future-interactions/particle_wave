@@ -2,7 +2,6 @@ let xoff = 0;
 let ballSizeSlider;
 let ballSpacingSlider;
 
-
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   fill(255);
@@ -15,11 +14,11 @@ function setup() {
   ballSpacingSlider.position(200, 16);
   ballSpacingSlider.style('width', '160px');
 
-speedSlider = createSlider(1, 10, 5);
+  speedSlider = createSlider(1, 10, 5);
   speedSlider.position(390, 16);
   speedSlider.style('width', '160px');
 
- heightSlider = createSlider(1, 100, 30);
+  heightSlider = createSlider(1, 100, 30);
   heightSlider.position(590, 16);
   heightSlider.style('width', '160px');
 
@@ -38,7 +37,7 @@ speedSlider = createSlider(1, 10, 5);
   let heightText = createElement('desc', 'Wave Size');
   heightText.style('color', '#ffffff');
   heightText.position(598, 36);
-
+  colorMode(RGB);
 }
 
 function draw() {
@@ -47,23 +46,22 @@ function draw() {
   } else {
     orbitControl(false);
   }
-  background(0);
-
-
+  background(20, 43, 57);
   let ballSize = ballSizeSlider.value();
   let spacing = ballSpacingSlider.value();
-  let numOfBalls = width / (ballSize + spacing);
+  let numOfBalls = (width*2) / (ballSize + spacing);
   for (let i = 0; i < numOfBalls; i++) {
     for (let j = 0; j < numOfBalls; j++) {
-
       push();
-      let x = noise(xoff + (i / 10) + (j /heightSlider.value()));
-      translate(-width / 2, 0, -j * (spacing + ballSize));
+      let x = noise(xoff + (i / 10) + (j / heightSlider.value()));
+      translate(-width *0.75, 0, -j * (spacing + ballSize));
+      fill(255, 255, 255, map(x, 0.5, 0.6,180, 255));
       ellipse(i * (spacing + ballSize), x * 100, ballSize, ballSize);
       pop();
     }
   }
-  xoff += speedSlider.value()/250;
+  xoff += speedSlider.value() / 250;
+  lights();
 }
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
