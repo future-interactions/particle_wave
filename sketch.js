@@ -2,7 +2,7 @@ let xoff = 0;
 let ballSizeSlider;
 let ballSpacingSlider;
 let SaveButton;
-
+let backgroundAlpha = 0;
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   fill(255);
@@ -59,7 +59,7 @@ function draw() {
   } else {
     orbitControl(false);
   }
-  background(20, 43, 57);
+  background(20, 43, 57, backgroundAlpha);
   let ballSize = ballSizeSlider.value();
   let spacing = ballSpacingSlider.value();
   let numOfBalls = (width * 2) / (ballSize + spacing);
@@ -82,5 +82,5 @@ function windowResized() {
 }
 
 function saveImage() {
-    saveCanvas('myCanvas', 'jpg');
+  saveCanvas('myCanvas', 'png');
 }
