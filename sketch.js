@@ -1,6 +1,7 @@
 let xoff = 0;
 let ballSizeSlider;
 let ballSpacingSlider;
+let SaveButton;
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -45,6 +46,10 @@ function setup() {
   let waveHeightText = createElement('desc', 'Wave Height');
   waveHeightText.style('color', '#ffffff');
   waveHeightText.position(798, 36);
+
+  SaveButton = createButton('Save');
+  SaveButton.position(990, 16);
+  SaveButton.mousePressed(saveImage);
   colorMode(RGB);
 }
 
@@ -57,15 +62,15 @@ function draw() {
   background(20, 43, 57);
   let ballSize = ballSizeSlider.value();
   let spacing = ballSpacingSlider.value();
-  let numOfBalls = (width*2) / (ballSize + spacing);
+  let numOfBalls = (width * 2) / (ballSize + spacing);
   for (let i = 0; i < numOfBalls; i++) {
     for (let j = 0; j < numOfBalls; j++) {
       push();
       let x = noise(xoff + (i / 10) + (j / waveSizeSlider.value()));
-      translate(-width *0.75,-waveHeightSlider.value()/2, -j * (spacing + ballSize));
-      fill(255, 255, 255, map(x, 0.5, 0.6,200, 255));
+      translate(-width * 0.75, -waveHeightSlider.value() / 2, -j * (spacing + ballSize));
+      fill(255, 255, 255, map(x, 0.5, 0.6, 200, 255));
       ellipse(i * (spacing + ballSize), x * waveHeightSlider.value(), ballSize, ballSize);
-     
+
       pop();
     }
   }
@@ -74,4 +79,8 @@ function draw() {
 }
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+function saveImage() {
+    saveCanvas('myCanvas', 'jpg');
 }
