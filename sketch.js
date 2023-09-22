@@ -5,16 +5,18 @@ let backgroundAlpha = 0;
 let currenty, lasty;
 let numbers, connectors;
 let particles = true;
-let DMSans;
+let DMSans, suisseMono;
+let counter = 0;
 function preload() {
   DMSans = loadFont('assets/DMSans-Medium.ttf');
+  suisseMono = loadFont('assets/SuisseIntlMono-Regular.otf');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   fill(255);
   noStroke();
-  textFont(DMSans);
+  // textFont(DMSans);
   drawInterface();
 }
 
@@ -39,11 +41,21 @@ function draw() {
 
       //numbers
       if (numbers) {
-        text(i + int(j * numOfBalls), i * (spacing + ballSize), currenty * waveHeightSlider.value() - 20);
+        textFont(suisseMono);
+        stroke(255, map(currenty, 0.5, 0.6, 200, 255));
+        if (i + int(j * numOfBalls) == 34 || i + int(j * numOfBalls) == 103 || i + int(j * numOfBalls) == 306 || i + int(j * numOfBalls) == 19 || i + int(j * numOfBalls) == 141 || i + int(j * numOfBalls) == 456 || i + int(j * numOfBalls) == 411 || i + int(j * numOfBalls) == 656 || i + int(j * numOfBalls) == 610 || i + int(j * numOfBalls) == 784 || i + int(j * numOfBalls) == 503) {
+          strokeWeight(2);
+
+          line(i * (spacing + ballSize), currenty * waveHeightSlider.value(), i * (spacing + ballSize), currenty * waveHeightSlider.value() - 95);
+          let textw = textWidth(nf(i + int(j * numOfBalls) + counter, 0, 2));
+          text(nf(i + int(j * numOfBalls) + counter, 0, 2), i * (spacing + ballSize) - (textw / 2), currenty * waveHeightSlider.value() - 100);
+          counter += 0.1;
+        }
+
       }
       //particles
       if (particles) {
-      ellipse(i * (spacing + ballSize), currenty * waveHeightSlider.value(), ballSize, ballSize);
+        ellipse(i * (spacing + ballSize), currenty * waveHeightSlider.value(), ballSize, ballSize);
       }
 
       if (i > 0 && connectors) {
@@ -69,12 +81,12 @@ function saveImage() {
 
 
 function drawInterface() {
-
-  ballSizeSlider = createSlider(2, 100, 10);
+  textFont(DMSans);
+  ballSizeSlider = createSlider(2, 100, 20);
   ballSizeSlider.position(10, 16);
   ballSizeSlider.style('width', '160px');
 
-  ballSpacingSlider = createSlider(15, 100, 20);
+  ballSpacingSlider = createSlider(15, 100, 40);
   ballSpacingSlider.position(200, 16);
   ballSpacingSlider.style('width', '160px');
 
