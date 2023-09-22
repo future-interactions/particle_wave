@@ -1,12 +1,75 @@
-let xoff = 0;
-let ballSizeSlider;
-let ballSpacingSlider;
+let yoff = 0;
+let ballSizeSlider, ballSpacingSlider, waveSizeSlider, waveHeightSlider, numbersCheckBox, particlesCheckBox, connectorsCheckBox;
 let SaveButton;
 let backgroundAlpha = 0;
+let currenty, lasty;
+let numbers, connectors;
+let particles = true;
+let DMSans;
+function preload() {
+  DMSans = loadFont('assets/DMSans-Medium.ttf');
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   fill(255);
   noStroke();
+  textFont(DMSans);
+  drawInterface();
+}
+
+function draw() {
+  if (mouseY > 50) {
+    orbitControl(true);
+  } else {
+    orbitControl(false);
+  }
+  background(20, 43, 57, backgroundAlpha);
+  let ballSize = ballSizeSlider.value();
+  let spacing = ballSpacingSlider.value();
+  let numOfBalls = (width) / (ballSize + spacing);
+
+  for (let i = 0; i < numOfBalls; i++) {
+    for (let j = 0; j < numOfBalls; j++) {
+      push();
+      lasty = noise(yoff + ((i - 1) / 10) + (j / waveSizeSlider.value()));
+      currenty = noise(yoff + (i / 10) + (j / waveSizeSlider.value()));
+      translate(-width * 0.5, -waveHeightSlider.value() / 2, -j * (spacing + ballSize));
+      fill(255, 255, 255, map(currenty, 0.5, 0.6, 200, 255));
+
+      //numbers
+      if (numbers) {
+        text(i + int(j * numOfBalls), i * (spacing + ballSize), currenty * waveHeightSlider.value() - 20);
+      }
+      //particles
+      if (particles) {
+      ellipse(i * (spacing + ballSize), currenty * waveHeightSlider.value(), ballSize, ballSize);
+      }
+
+      if (i > 0 && connectors) {
+        stroke(255, map(currenty, 0.5, 0.6, 200, 255));
+        line(i * (spacing + ballSize), currenty * waveHeightSlider.value(), (i - 1) * (spacing + ballSize), lasty * waveHeightSlider.value());
+      }
+      pop();
+    }
+  }
+
+  yoff += speedSlider.value() / 250;
+
+  lights();
+}
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+function saveImage() {
+  saveCanvas('perlin_wave', 'png');
+}
+
+
+
+function drawInterface() {
+
   ballSizeSlider = createSlider(2, 100, 10);
   ballSizeSlider.position(10, 16);
   ballSizeSlider.style('width', '160px');
@@ -50,37 +113,49 @@ function setup() {
   SaveButton = createButton('Save');
   SaveButton.position(990, 16);
   SaveButton.mousePressed(saveImage);
-  colorMode(RGB);
+
+  particlesCheckBox = createCheckbox();
+  particlesCheckBox.checked(true);
+  particlesCheckBox.position(12, 70);
+  particlesCheckBox.changed(myCheckedEvent);
+
+  let particleText = createElement('desc', 'Show particles');
+  particleText.style('color', '#ffffff');
+  particleText.position(36, 69.5);
+
+  numbersCheckBox = createCheckbox('label', false);
+  numbersCheckBox.position(204, 70);
+  numbersCheckBox.changed(myCheckedEvent);
+
+  let numbersText = createElement('desc', 'Show numbers');
+  numbersText.style('color', '#ffffff');
+  numbersText.position(228, 70);
+
+  connectorsCheckBox = createCheckbox('label', false);
+  connectorsCheckBox.position(394, 70);
+  connectorsCheckBox.changed(myCheckedEvent);
+
+  let connectorsText = createElement('desc', 'Show connectors');
+  connectorsText.style('color', '#ffffff');
+  connectorsText.position(418, 70);
 }
 
-function draw() {
-  if (mouseY > 50) {
-    orbitControl(true);
+function myCheckedEvent() {
+  if (numbersCheckBox.checked()) {
+    numbers = true;
   } else {
-    orbitControl(false);
+    numbers = false;
   }
-  background(20, 43, 57, backgroundAlpha);
-  let ballSize = ballSizeSlider.value();
-  let spacing = ballSpacingSlider.value();
-  let numOfBalls = (width * 2) / (ballSize + spacing);
-  for (let i = 0; i < numOfBalls; i++) {
-    for (let j = 0; j < numOfBalls; j++) {
-      push();
-      let x = noise(xoff + (i / 10) + (j / waveSizeSlider.value()));
-      translate(-width * 0.75, -waveHeightSlider.value() / 2, -j * (spacing + ballSize));
-      fill(255, 255, 255, map(x, 0.5, 0.6, 200, 255));
-      ellipse(i * (spacing + ballSize), x * waveHeightSlider.value(), ballSize, ballSize);
 
-      pop();
-    }
+  if (particlesCheckBox.checked()) {
+    particles = true;
+  } else {
+    particles = false;
   }
-  xoff += speedSlider.value() / 250;
-  lights();
-}
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
 
-function saveImage() {
-  saveCanvas('perlin_wave', 'png');
+  if (connectorsCheckBox.checked()) {
+    connectors = true;
+  } else {
+    connectors = false;
+  }
 }
